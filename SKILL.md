@@ -49,7 +49,7 @@ Resolve `<skill-dir>` as the directory containing this `SKILL.md` file, then inv
 - **Windows (`pwsh`)**: [run-codex.ps1](./scripts/run-codex.ps1)
 - **macOS / Linux (`bash`)**: [run-codex.sh](./scripts/run-codex.sh)
 
-- **Sandbox Rule**: Because `codex` reads authentication from `~/.codex` and connects to the OpenAI API over the network, run **only** this dispatch command with `BypassSandbox: true` and `WaitMsBeforeAsync: 10000`. Keep all your own inspection, `git diff`, and test verification commands in Standard Sandbox Mode (`BypassSandbox: false`).
+- **Execution Rule**: Because `codex` reads authentication from `~/.codex` and connects to the OpenAI API over the network, set `WaitMsBeforeAsync: 10000` when calling `run_command` (and if your `run_command` tool schema exposes a `BypassSandbox` parameter, set `BypassSandbox: true` ONLY on this dispatch command while keeping your own inspection/review commands sandboxed).
 - **Async Handling**: Coding tasks often take 30–180 seconds. If the command moves to background after 10 seconds, **stop calling tools and wait** — the system automatically wakes you when the background task finishes. Never poll in a loop.
 - **Command Shape** (resolve `<skill-dir>` and `<workspace-abs-path>` to concrete literal paths — avoid `$(...)` or shell variables so user approval prefix-matches cleanly):
 
