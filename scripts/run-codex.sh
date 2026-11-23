@@ -52,12 +52,20 @@ if [[ ! -s "$SPEC_FILE" ]]; then
   exit 2
 fi
 
+WORK_DIR="$(cd "$WORK_DIR" && pwd)"
+SPEC_FILE="$(cd "$(dirname "$SPEC_FILE")" && pwd)/$(basename "$SPEC_FILE")"
+
 mkdir -p "$(dirname "$SUMMARY_FILE")"
+SUMMARY_FILE="$(cd "$(dirname "$SUMMARY_FILE")" && pwd)/$(basename "$SUMMARY_FILE")"
 rm -f "$SUMMARY_FILE"
 
-if [[ -d "$WORK_DIR/.git" && -f "$WORK_DIR/.git/info/exclude" ]]; then
-  if ! grep -qxF ".codex-tasks/" "$WORK_DIR/.git/info/exclude"; then
-    printf "\n# Antigravity codex-worker task artifacts\n.codex-tasks/\n" >> "$WORK_DIR/.git/info/exclude"
+if command -v git >/dev/null 2>&1; then
+  EXCLUDE_FILE="$(git -C "$WORK_DIR" rev-parse --git-path info/exclude 2>/dev/null || true)"
+  if [[ -n "$EXCLUDE_FILE" ]]; then
+    [[ "$EXCLUDE_FILE" = /* ]] || EXCLUDE_FILE="$WORK_DIR/$EXCLUDE_FILE"
+    if [[ -f "$EXCLUDE_FILE" ]] && ! grep -qxF ".codex-tasks/" "$EXCLUDE_FILE"; then
+      printf "\n# Antigravity codex-worker task artifacts\n.codex-tasks/\n" >> "$EXCLUDE_FILE"
+    fi
   fi
 fi
 

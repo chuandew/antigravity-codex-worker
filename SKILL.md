@@ -67,8 +67,9 @@ bash "<skill-dir>/scripts/run-codex.sh" --work-dir "<workspace-abs-path>" --spec
 ```
 
 Optional flags supported by `run-codex.ps1` (and `--kebab-case` equivalents in `run-codex.sh`):
+- `-Sandbox "<mode>"` (`--sandbox`): `workspace-write` (default for implementation/bugfix), `read-only` (for research/audit), or `danger-full-access` (bypasses Codex's inner `bwrap` sandbox; use when the user explicitly opts in or on Linux hosts where `bwrap` user namespaces are restricted).
 - `-Model "<model-slug>"` (`--model`): Overrides Codex's default model for this run. Only set when the user asks for a specific model; omit otherwise to use `~/.codex/config.toml` default.
-- `-ReasoningEffort "<level>"` (`--reasoning-effort`): Overrides Codex's thinking effort (`minimal`, `low`, `medium`, `high`, `xhigh`, `max`, `ultra`) via `-c model_reasoning_effort=...`. Set when the user requests a specific thinking intensity; omit otherwise to use `~/.codex/config.toml` default.
+- `-ReasoningEffort "<level>"` (`--reasoning-effort`): Overrides Codex's thinking effort (`minimal`, `low`, `medium`, `high`, `xhigh`, `max`, `ultra`) via `-c model_reasoning_effort=...`. Prefer `low` or `medium` for well-specified routine changes to avoid overthinking and over-defensive boilerplate; reserve `high` / `xhigh` for genuinely complex algorithms, concurrency, or deep root-cause debugging. Omit when neither the user nor task complexity calls for an override to use `~/.codex/config.toml` default.
 - `-ResumeLast` (`--resume-last`): Resumes the most recent Codex session in `-WorkDir` (use for Stage 5 rework).
 - `-SkipGitCheck` (`--skip-git-check`): Allows execution outside a Git repository when explicitly requested.
 - `-Image "<file-path>"` (`--image`): Attaches reference screenshot/mockup file(s) to the prompt.
@@ -83,6 +84,7 @@ Optional flags supported by `run-codex.ps1` (and `--kebab-case` equivalents in `
      - Did Codex follow the exact architecture and interfaces?
      - Did it touch any forbidden files?
      - Are error handling, types, security, and edge cases properly handled?
+     - **Anti-Bloat Check**: Reject unnecessary defensive boilerplate (redundant internal guards, speculative fallbacks, single-use over-abstraction, verbose narration comments) and request simplification in Stage 5 rework.
 3. **Run Independent Verification**: Run the project's test suite, typechecker, or linter yourself to confirm everything passes cleanly.
 
 ### Stage 5: VERDICT (Approve or Rework)

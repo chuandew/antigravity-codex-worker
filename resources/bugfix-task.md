@@ -15,6 +15,11 @@
   - Keep the fix minimal, targeted, and surgical — do NOT bundle unrelated refactoring or formatting sweeps.
   - Add or update a regression test covering this exact bug.
   - Do NOT run `git commit`, `git push`, or destructive git commands. Leave changes in the working tree for review.
+  - **No Over-Defensive Coding**:
+    - Validate inputs ONLY at system boundaries (API/CLI/external I/O); trust internal function contracts and static types — do NOT add redundant null/type checks inside internal helpers.
+    - Prefer fail-fast over silent fallbacks or speculative `try/catch` blocks.
+    - Do NOT introduce single-use abstractions, compatibility shims, or "just-in-case" branches not requested in the fix plan.
+    - Avoid obvious line-by-line narration comments; only comment non-obvious invariants or "why".
 
 ## 3. Fix Plan
 1. Confirm the root cause in code (if the actual root cause differs from the hypothesis above, fix the real root cause and explain clearly in your summary).

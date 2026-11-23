@@ -12,6 +12,11 @@
   - Do NOT modify files outside the allowed scope above unless strictly required for compilation (if so, document why in your summary).
   - Do NOT run `git commit`, `git push`, `git reset --hard`, or `git checkout --`. Leave all edits unstaged in the working tree for architectural review.
   - Do NOT touch `.codex-tasks/`.
+  - **No Over-Defensive Coding**:
+    - Validate inputs ONLY at system boundaries (API/CLI/external I/O); trust internal function contracts and static types — do NOT add redundant null/type checks inside internal helpers.
+    - Prefer fail-fast over silent fallbacks or speculative `try/catch` blocks.
+    - Do NOT introduce single-use abstractions, compatibility shims, or "just-in-case" branches not requested in the spec.
+    - Avoid obvious line-by-line narration comments; only comment non-obvious invariants or "why".
 
 ## 3. Architectural Design & Implementation Plan
 <!-- Provide concrete, unambiguous engineering instructions: data models, function/method signatures, algorithms, error handling, and edge cases. -->
